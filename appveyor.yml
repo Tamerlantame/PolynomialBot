@@ -1,0 +1,7 @@
+﻿image: Visual Studio 2019
+
+before_build:
+- nuget restore PolynomialBot.sln
+
+build:
+    project: PolynomialBot.sln

@@ -121,14 +121,14 @@ namespace PolynomialBot
                     idExecutorPairs.Remove(message.From.Id);
                     await BotClient.SendTextMessageAsync(message.From.Id, "Очищено");
                     break;
-                //case "/getvars":
-                //    if (!idExecutorPairs.ContainsKey(message.From.Id))
-                //        idExecutorPairs.Add(message.From.Id, new Executor<Polynomial>());
-                //    string vars = idExecutorPairs[message.From.Id].GetVars();
-                //    if (vars == "" || vars == null)
-                //        vars = "Упс, никаких переменных нет";
-                //    await BotClient.SendTextMessageAsync(message.From.Id, vars);
-                //    break;
+                case "/getvars":
+                    if (!idExecutorPairs.ContainsKey(message.From.Id))
+                        idExecutorPairs.Add(message.From.Id, new Executor<Polynomial>());
+                    string vars = idExecutorPairs[message.From.Id].GetVars();
+                    if (vars == "" || vars == null)
+                        vars = "Упс, никаких переменных нет";
+                    await BotClient.SendTextMessageAsync(message.From.Id, vars);
+                    break;
                 case "/generede":
                     var replayGeneradKeyboard = new InlineKeyboardMarkup(new[]
                     {

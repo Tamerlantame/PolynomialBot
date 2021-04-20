@@ -1,12 +1,9 @@
-﻿// <copyright file="Program.cs"
-// All rights reserved.
-// </copyright>
-namespace PolynomialBot
+﻿namespace PolynomialBot
 {
-    using System;
-    using System.Collections.Generic;
     using Arithmetics.Polynomial1;
     using ElementaryInterpreter;
+    using System;
+    using System.Collections.Generic;
     using Telegram.Bot;
     using Telegram.Bot.Types.Enums;
 
@@ -68,17 +65,18 @@ namespace PolynomialBot
 /getvars - получить список переменных";
                     await botClient.SendTextMessageAsync(message.From.Id, startMessage);
                     break;
+
                 case "/regulations":
                     string regulationsMessage =
  @"
 Правила использования:
  Бот умеет:
-  вычислять выражения типа ax^n+bx^(n-1) + ... + cx + d 
+  вычислять выражения типа ax^n+bx^(n-1) + ... + cx + d
   и приводить их в стандартную форму
   где a,b,c,d -целые числа, а n - натуральное.
-  Присваивать значения переменным 
+  Присваивать значения переменным
   и взаимодействовать с ними.
-  Например, при вводе следующего сообщения 
+  Например, при вводе следующего сообщения
   'nameOne := x+1
    nameTwo := x+1
    nameOne + nameTwo'
@@ -133,6 +131,7 @@ namespace PolynomialBot
                     IdExecutorPairs.Remove(message.From.Id);
                     await botClient.SendTextMessageAsync(message.From.Id, "Очищено");
                     break;
+
                 case "/getvars":
                     if (!IdExecutorPairs.ContainsKey(message.From.Id))
                     {

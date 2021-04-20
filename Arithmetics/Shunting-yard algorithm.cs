@@ -15,28 +15,34 @@ namespace Arithmetics.Parsers
     //https://gist.github.com/istupakov/c49ef290c3bc3dbe329bf68f67971470
     //https://www.codeproject.com/Tips/351042/Shunting-Yard-algorithm-in-Csharp
     public enum TokenType { Polynomial, Variable, Function, Parenthesis, Operator, Comma, WhiteSpace, Exeption };
+
     public enum FunctionType { Unary, Binary };
+
     public enum OperatorType { Binary, Boolean };
 
     public delegate Polynomial BinaryFunc(Polynomial leftOp, Polynomial rightOp);
+
     public delegate bool BinaryBoolOperator(Polynomial leftOp, Polynomial rightOp);
+
     public delegate Polynomial UnaryFunc(Polynomial Func);
-    
+
     public struct Token
     {
         public TokenType Type { get; }
         public string Value { get; }
+
         public override string ToString()
         {
             return $"{Type}: {Value}";
         }
+
         public Token(TokenType type, string value)
         {
             Type = type;
             Value = value;
         }
-
     }
+
     public class Operator : IComparable<Operator>
     {
         //Двусимвольные Операторы пока недоступны для использования
@@ -154,6 +160,7 @@ namespace Arithmetics.Parsers
                 }
             },
         };
+
         public OperatorType Type { get; set; }
         public string Name { get; set; }
         public int Precedence { get; set; }
@@ -161,6 +168,7 @@ namespace Arithmetics.Parsers
 
         public BinaryFunc biOperator;
         public BinaryBoolOperator biBoolOperator;
+
         /// <summary>
         /// return IDictionary with operators
         /// </summary>
@@ -169,19 +177,21 @@ namespace Arithmetics.Parsers
         {
             return operators;
         }
+
         public int CompareTo(Operator other)
         {
             return this.Precedence - other.Precedence;
         }
     }
+
     public class Function : IComparable<Function>
     {
-        
         public FunctionType Type { get; set; }
         public string Name { get; set; }
         public int Precedence { get; set; }
         public BinaryFunc BiFunction;
-        public UnaryFunc  UFunction;
+        public UnaryFunc UFunction;
+
         /// <summary>
         /// return IDictionary with functions
         /// </summary>
@@ -189,27 +199,32 @@ namespace Arithmetics.Parsers
         private static readonly IDictionary<string, Function> functions = new Dictionary<string, Function>
         {
             ["Eval"] = new Function { Name = "Eval", Precedence = 0, Type = FunctionType.Binary, BiFunction = ((Polynomial x, Polynomial y) => x.Eval(y)) },
-            ["Diff"] = new Function { Name = "Diff", Precedence = 0, Type = FunctionType.Unary , UFunction  = ((Polynomial x)    =>   Polynomial.Diff(x)) }
-
+            ["Diff"] = new Function { Name = "Diff", Precedence = 0, Type = FunctionType.Unary, UFunction = ((Polynomial x) => Polynomial.Diff(x)) }
         };
+
         public static IDictionary<string, Function> GetFunctions()
         {
             return functions;
         }
+
         public int CompareTo(Function other)
         {
             return this.Precedence - other.Precedence;
         }
     }
-    class Parser
+
+    internal class Parser
     {
         public static IDictionary<string, Operator> operators = Operator.GetOperators();
         public static IDictionary<string, Function> functions = Function.GetFunctions();
+
         private bool CompareOperators(Operator op1, Operator op2)
         {
             return op1.RightAssociative ? op1.Precedence < op2.Precedence : op1.Precedence <= op2.Precedence;
         }
+
         private bool CompareOperators(string op1, string op2) => CompareOperators(operators[op1], operators[op2]);
+
         private TokenType DetermineType(char ch)
         {
             if (char.IsLetter(ch) && ch != 'x')
@@ -226,6 +241,7 @@ namespace Arithmetics.Parsers
                 return TokenType.Operator;
             return TokenType.Exeption;
         }
+
         public IEnumerable<Token> Tokenize(TextReader reader)
         {
             var token = new StringBuilder();
@@ -257,7 +273,7 @@ namespace Arithmetics.Parsers
                 }
             }
         }
-        
+
         public IEnumerable<Token> ShuntingYard(IEnumerable<Token> tokens)
         {
             var stack = new Stack<Token>();
@@ -269,18 +285,22 @@ namespace Arithmetics.Parsers
                     case TokenType.Variable:
                         yield return tok;
                         break;
+
                     case TokenType.Function:
                         stack.Push(tok);
                         break;
+
                     case TokenType.Comma:
                         while (stack.Peek().Value != "(")
                             yield return stack.Pop();
                         break;
+
                     case TokenType.Operator:
                         while (stack.Any() && stack.Peek().Type == TokenType.Operator && CompareOperators(tok.Value, stack.Peek().Value))
                             yield return stack.Pop();
                         stack.Push(tok);
                         break;
+
                     case TokenType.Parenthesis:
                         if (tok.Value == "(")
                             stack.Push(tok);
@@ -297,8 +317,9 @@ namespace Arithmetics.Parsers
                             }
                         }
                         break;
+
                     default:
-                        ShuntingYardException ShuntingYardExeption =  new ShuntingYardException("Wrong token", tok);
+                        ShuntingYardException ShuntingYardExeption = new ShuntingYardException("Wrong token", tok);
                         break;
                 }
             }
@@ -313,7 +334,5 @@ namespace Arithmetics.Parsers
                 yield return tok;
             }
         }
-
     }
-
 }

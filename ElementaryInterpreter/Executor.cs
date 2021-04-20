@@ -4,15 +4,16 @@ namespace ElementaryInterpreter
 {
     public class Executor<T> where T : IComputerAlgebraType, new()
     {
-
         private readonly Calculator<T> calculator;
+
         public Executor()
         {
             calculator = new Calculator<T>();
         }
+
         public string GetVars()
         {
-            string result="";
+            string result = "";
 
             foreach (var item in calculator.Vars.Keys)
             {
@@ -21,9 +22,9 @@ namespace ElementaryInterpreter
             }
             return result;
         }
+
         public string Launch(string text)
         {
-
             var lines = text.Replace(" ", "").Split(new Char[] { '\n' });
             string result = "";
             for (int i = 0; i < lines.Length; i++)
@@ -45,11 +46,11 @@ namespace ElementaryInterpreter
                     {
                         result += exeption.Message + "\n";
                     }
-
                 }
             }
             return result;
         }
+
         /// <summary>
         ///  A:= some expression,
         ///  A:= A*A;
@@ -82,7 +83,7 @@ namespace ElementaryInterpreter
         /// Get result of while cycle
         /// </summary>
         /// <param name="cycle">
-        /// string with cycle in 
+        /// string with cycle in
         /// "While(...)
         /// {
         /// ...
@@ -101,6 +102,7 @@ namespace ElementaryInterpreter
             }
             return result;
         }
+
         private string GetBody(string text, out int bodyLength)
         {
             int leftBracetNum = 0, rightBracetNum = 0, stringNum = 0;
@@ -134,7 +136,6 @@ namespace ElementaryInterpreter
                     if (rightBracetNum == 0)
                         lastBracetIndex = i;
                 }
-
             }
             bodyLength = stringNum;
             return text.Substring(firstBracetIndex + 1, lastBracetIndex - (firstBracetIndex + 1));

@@ -1,19 +1,20 @@
 ﻿// verified by ususucsus. gadost' detected and destructed
+using Arithmetics.Parsers;
+using ElementaryInterpreter;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Arithmetics.Parsers;
-using ElementaryInterpreter;
 
 namespace Arithmetics.Polynomial1
 {
     public class Polynomial : IComparable<Polynomial>, IEnumerable<int>, IComputerAlgebraType
     {
-        //Поля
+        // Поля
         private readonly SortedList<int, double> coeff;
 
         public int Deg { get; }
-        //Индексатор
+
+        // Индексатор
         public double this[int index]
         {
             get
@@ -28,8 +29,8 @@ namespace Arithmetics.Polynomial1
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Polynomial"/> class.
-        /// If <paramref name="poly"/> is a correct representaion of a polynomial (i.e. a sum of monomials of the form either a, ax or ax^b for some integers a and b.), 
-        /// constructs the corresponding polynomial. Otherwise the polynomial is initialized as 0. 
+        /// If <paramref name="poly"/> is a correct representaion of a polynomial (i.e. a sum of monomials of the form either a, ax or ax^b for some integers a and b.),
+        /// constructs the corresponding polynomial. Otherwise the polynomial is initialized as 0.
         /// </summary>
         /// <param name="poly">string representation of a polynomial</param>
         public Polynomial(string poly)
@@ -45,7 +46,6 @@ namespace Arithmetics.Polynomial1
             this.Deg = this.coeff.Keys[this.coeff.Keys.Count - 1];
         }
 
-        // Конструкторы
         /// <summary>
         /// Initializes a new instance of the <see cref="Polynomial"/> class.
         /// </summary>
@@ -63,7 +63,7 @@ namespace Arithmetics.Polynomial1
         {
             this.coeff = new SortedList<int, double>
             {
-                { deg, 0 }
+                { deg, 0 },
             };
             this.Deg = this.coeff.Keys[this.coeff.Keys.Count - 1];
         }
@@ -74,7 +74,6 @@ namespace Arithmetics.Polynomial1
         /// <param name="coeff"></param>
         public Polynomial(SortedList<int, double> coeff)
         {
-
             this.coeff = new SortedList<int, double>();
             foreach (int deg in coeff.Keys)
             {
@@ -142,6 +141,7 @@ namespace Arithmetics.Polynomial1
                                         s += coeff[deg];
                                 }
                                 break;
+
                             case 1:
                                 if (Deg >= 2)
                                 {
@@ -158,6 +158,7 @@ namespace Arithmetics.Polynomial1
                                         s += coeff[deg] + "x";
                                 }
                                 break;
+
                             default:
                                 if (coeff[deg] != 0)
                                 {
@@ -186,6 +187,7 @@ namespace Arithmetics.Polynomial1
                             case 0:
                                 s += coeff[deg];
                                 break;
+
                             case 1:
                                 if (coeff[deg] == -1)
                                     s += "-x";
@@ -193,6 +195,7 @@ namespace Arithmetics.Polynomial1
                                     s += coeff[deg] + "x";
 
                                 break;
+
                             default:
                                 if (coeff[deg] == -1)
                                     s += "-x^" + deg;
@@ -268,6 +271,7 @@ namespace Arithmetics.Polynomial1
             }
             return result;
         }
+
         public static Polynomial operator /(Polynomial p1, double number)
         {
             if (number == 0)
@@ -279,6 +283,7 @@ namespace Arithmetics.Polynomial1
             }
             return new Polynomial(coeff);
         }
+
         /// <summary>
         /// Input: a and b ≠ 0 two polynomials in the variable x;
         /// Output: q, the quotient, and r, the remainder;
@@ -289,7 +294,7 @@ namespace Arithmetics.Polynomial1
         public static Polynomial operator /(Polynomial p1, Polynomial p2)
         {
             if (p1.Deg == 1 && p2.Deg == 1)
-                return  p1[1] / p2[1];
+                return p1[1] / p2[1];
             if (p2 == 0)
                 throw new DivideByZeroException();
             Polynomial q = 0;
@@ -305,6 +310,7 @@ namespace Arithmetics.Polynomial1
             }
             return new Polynomial(q);
         }
+
         /// <summary>
         /// Input: a and b ≠ 0 two polynomials in the variable x;
         /// Output: q, the quotient, and r, the remainder;
@@ -328,6 +334,7 @@ namespace Arithmetics.Polynomial1
             }
             return new Polynomial(r);
         }
+
         public static bool operator >(Polynomial p1, Polynomial p2)
         {
             if (p2.Deg > p1.Deg)
@@ -336,6 +343,7 @@ namespace Arithmetics.Polynomial1
                 return p1[p1.Deg] > p2[p2.Deg];
             return true;
         }
+
         public static bool operator >=(Polynomial p1, Polynomial p2)
         {
             if (p2.Deg > p1.Deg)
@@ -344,10 +352,12 @@ namespace Arithmetics.Polynomial1
                 return p1[p1.Deg] >= p2[p2.Deg];
             return true;
         }
+
         public static bool operator <=(Polynomial p1, Polynomial p2)
         {
             return !(p1 >= p2);
         }
+
         public static bool operator <(Polynomial p1, Polynomial p2)
         {
             if (p2.Deg < p1.Deg)
@@ -356,6 +366,7 @@ namespace Arithmetics.Polynomial1
                 return p1[p1.Deg] < p2[p2.Deg];
             return true;
         }
+
         public static bool operator ==(Polynomial p1, Polynomial p2)
         {
             foreach (int deg in p1.coeff.Keys)
@@ -375,6 +386,7 @@ namespace Arithmetics.Polynomial1
         {
             return !(p1 == p2);
         }
+
         public override bool Equals(object obj)
         {
             return obj is Polynomial polynomial &&
@@ -386,6 +398,7 @@ namespace Arithmetics.Polynomial1
         {
             return base.GetHashCode();
         }
+
         //Методы
         /// <summary>
         /// Возвращает d/dx
@@ -403,6 +416,7 @@ namespace Arithmetics.Polynomial1
 
             return new Polynomial(coeff);
         }
+
         /// <summary>
         ///  подставляет polynomial вместо x и получает полином
         /// </summary>
@@ -416,9 +430,9 @@ namespace Arithmetics.Polynomial1
                 poly = poly + "+" + (this[deg] * (polynomial ^ deg)).ToString();
             }
 
-
             return new Polynomial(PolynomialParser.Parse(poly));
         }
+
         //TODO подумать как реализовать CompareTo более детально
         public int CompareTo(Polynomial a)
         {
@@ -452,10 +466,8 @@ namespace Arithmetics.Polynomial1
             return new Polynomial(coeff);
         }
 
-
         public IEnumerator<int> GetEnumerator()
         {
-
             return coeff.Keys.GetEnumerator();
         }
 

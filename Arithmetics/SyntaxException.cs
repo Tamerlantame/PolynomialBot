@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Arithmetics.Parsers
 {
-    class SyntaxException : Exception
+    internal class SyntaxException : Exception
     {
         public SyntaxException()
         {

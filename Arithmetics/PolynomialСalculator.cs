@@ -1,19 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
-using Arithmetics.Parsers;
+﻿using Arithmetics.Parsers;
 using Arithmetics.Polynomial1;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace Arithmetics
 {
-    class PolynomialСalculator
+    internal class PolynomialСalculator
     {
         public Dictionary<string, Polynomial> PolyVars { get; private set; }
+
         public PolynomialСalculator()
         {
             PolyVars = new Dictionary<string, Polynomial>();
         }
+
         public PolynomialСalculator(Dictionary<string, Polynomial> vars)
         {
             PolyVars = new Dictionary<string, Polynomial>(vars);
@@ -35,6 +37,7 @@ namespace Arithmetics
             tokens = rpn.ToList();
             return rpnStr;
         }
+
         /// <summary>
         /// вычисляет выражение, записанное в RPN(обратная польская запись)
         /// </summary>
@@ -42,7 +45,6 @@ namespace Arithmetics
         /// <returns></returns>
         public string RPNToAnswer(string expression)
         {
-
             var text = ExpressionToRPN(expression, out var tokensList);
             var tokens = tokensList.ToArray();
             var stack = new Stack<Token>();
@@ -55,12 +57,14 @@ namespace Arithmetics
                     case TokenType.Polynomial:
                         stack.Push(tokens[i]);
                         break;
+
                     case TokenType.Variable:
                         if (PolyVars.ContainsKey(tokens[i].Value.ToString()))
                             stack.Push(new Token(TokenType.Polynomial, PolyVars[tokens[i].Value].ToString()));
                         else
                             stack.Push(tokens[i]);
                         break;
+
                     case TokenType.Function:
                         if (Function.GetFunctions()[tokens[i].Value].Type == FunctionType.Unary)
                         {
@@ -90,7 +94,7 @@ namespace Arithmetics
                             {
                                 SyntaxException syntaxException = new SyntaxException("Не удалось применить функцию к операнду(ам)");
                                 rightOp = new Token(TokenType.Exeption, syntaxException.Message);
-                                leftOp  = new Token(TokenType.Exeption, syntaxException.Message);
+                                leftOp = new Token(TokenType.Exeption, syntaxException.Message);
                             }
                             result = Function.GetFunctions()[tokens[i].Value].BiFunction
                               (
@@ -100,6 +104,7 @@ namespace Arithmetics
                             stack.Push(new Token(TokenType.Polynomial, result.ToString()));
                         }
                         break;
+
                     case TokenType.Operator:
                         try
                         {
@@ -111,7 +116,6 @@ namespace Arithmetics
                             SyntaxException syntaxException = new SyntaxException("Не удалось применить оператор к операнду(ам)");
                             rightOp = new Token(TokenType.Polynomial, "0");
                             //leftOp  = new Token(TokenType.Exeption, syntaxException.Message);
-
                         }
                         try
                         {
@@ -122,8 +126,7 @@ namespace Arithmetics
                         {
                             SyntaxException syntaxException = new SyntaxException("Не удалось применить оператор к операнду(ам)");
                             //rightOp = new Token(TokenType.Exeption, syntaxException.Message);
-                            leftOp  = new Token(TokenType.Polynomial, "0");
-
+                            leftOp = new Token(TokenType.Polynomial, "0");
                         }
                         if (Operator.GetOperators()[tokens[i].Value].Type == OperatorType.Binary)
                         {
@@ -136,11 +139,10 @@ namespace Arithmetics
                                    );
                                 stack.Push(new Token(TokenType.Polynomial, result.ToString()));
                             }
-                            catch(InvalidPolynomialStringException exception)
+                            catch (InvalidPolynomialStringException exception)
                             {
                                 stack.Push(new Token(TokenType.Exeption, exception.Message));
                             }
-                            
                         }
                         else//TODO подумать как детальнее реализовать взаимодействие с логическими операциями
                         {

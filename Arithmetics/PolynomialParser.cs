@@ -1,12 +1,9 @@
-﻿using Arithmetics.Polynomial1;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Arithmetics.Parsers
+﻿namespace Arithmetics.Parsers
 {
+    using System;
+    using System.Collections.Generic;
+    using Arithmetics.Polynomial1;
+
     /// <summary>
     /// Contains method for convertion of a given string representation of polynomials into lists of coefficients.
     /// </summary>
@@ -32,9 +29,12 @@ namespace Arithmetics.Parsers
                 string[] s = polyString.Split(new char[] { '+' });
                 foreach (string monomial in s)
                 {
-                    if (monomial == "")
+                    if (monomial == string.Empty)
+                    {
                         continue;
-                    if(monomial.Contains("x"))
+                    }
+
+                    if (monomial.Contains("x"))
                     {
                         monomialDeg = 1;
                         indexOfx = monomial.IndexOf("x");
@@ -44,29 +44,37 @@ namespace Arithmetics.Parsers
                             indexOfDeg = indexOfx + 2; // i.e. index of the symbol directly after substring "x^"
                             monomialDeg = Convert.ToInt32(monomial.Substring(indexOfDeg));
                         }
+
                         if (!coefficientsList.ContainsKey(monomialDeg))
+                        {
                             coefficientsList.Add(monomialDeg, monomialCoeff);
+                        }
                         else
+                        {
                             coefficientsList[monomialDeg] += monomialCoeff;
+                        }
                     }
                     else
                     {
                         if (!coefficientsList.ContainsKey(0))
+                        {
                             coefficientsList.Add(0, Convert.ToDouble(monomial));
+                        }
                         else
+                        {
                             coefficientsList[0] += Convert.ToDouble(monomial);
+                        }
                     }
                 }
-
             }
             catch (Exception e)
             {
-                //coefficientsList.Clear();
-                //coefficientsList.Add(0, 0);
+                // coefficientsList.Clear();
+                // coefficientsList.Add(0, 0);
                 InvalidPolynomialStringException invalidPolynomialStringException = new InvalidPolynomialStringException(e.StackTrace);
             }
-            return coefficientsList;
-    }
 
+            return coefficientsList;
+        }
     }
 }

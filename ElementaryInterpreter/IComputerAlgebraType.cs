@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace ElementaryInterpreter
+﻿namespace ElementaryInterpreter
 {
+    using System.Collections.Generic;
+
     public interface IComputerAlgebraType
     {
         IComputerAlgebraType ParseExpression(string expr);

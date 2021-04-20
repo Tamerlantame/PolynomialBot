@@ -27,6 +27,7 @@ namespace Arithmetics.Polynomial1
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Polynomial"/> class.
         /// If <paramref name="poly"/> is a correct representaion of a polynomial (i.e. a sum of monomials of the form either a, ax or ax^b for some integers a and b.), 
         /// constructs the corresponding polynomial. Otherwise the polynomial is initialized as 0. 
         /// </summary>
@@ -35,28 +36,42 @@ namespace Arithmetics.Polynomial1
         {
             try
             {
-                coeff = PolynomialParser.Parse(poly);
+                this.coeff = PolynomialParser.Parse(poly);
             }
             catch (InvalidPolynomialStringException)
             {
-                coeff.Add(0, 0);
+                this.coeff.Add(0, 0);
             }
-            Deg = this.coeff.Keys[this.coeff.Keys.Count - 1];
+            this.Deg = this.coeff.Keys[this.coeff.Keys.Count - 1];
         }
-        //Конструкторы
+
+        // Конструкторы
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Polynomial"/> class.
+        /// </summary>
         public Polynomial()
         {
-            coeff = new SortedList<int, double>();
-            Deg = 0;
+            this.coeff = new SortedList<int, double>();
+            this.Deg = 0;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Polynomial"/> class.
+        /// </summary>
+        /// <param name="deg"></param>
         public Polynomial(int deg)
         {
-            coeff = new SortedList<int, double>();
-            coeff.Add(deg, 0);
-            Deg = this.coeff.Keys[this.coeff.Keys.Count - 1];
+            this.coeff = new SortedList<int, double>
+            {
+                { deg, 0 }
+            };
+            this.Deg = this.coeff.Keys[this.coeff.Keys.Count - 1];
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Polynomial"/> class.
+        /// </summary>
+        /// <param name="coeff"></param>
         public Polynomial(SortedList<int, double> coeff)
         {
 
@@ -64,26 +79,42 @@ namespace Arithmetics.Polynomial1
             foreach (int deg in coeff.Keys)
             {
                 if (coeff[deg] != 0)
+                {
                     this.coeff.Add(deg, coeff[deg]);
+                }
             }
             if (this.coeff.Count != 0)
-                Deg = this.coeff.Keys[this.coeff.Keys.Count - 1];
+            {
+                this.Deg = this.coeff.Keys[this.coeff.Keys.Count - 1];
+            }
             else
-                Deg = 0;
+            {
+                this.Deg = 0;
+            }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Polynomial"/> class.
+        /// </summary>
+        /// <param name="polynimial"></param>
         public Polynomial(Polynomial polynimial)
         {
-            coeff = new SortedList<int, double>();
+            this.coeff = new SortedList<int, double>();
             foreach (int deg in polynimial.coeff.Keys)
             {
                 if (polynimial[deg] != 0)
-                    coeff.Add(deg, polynimial[deg]);
+                {
+                    this.coeff.Add(deg, polynimial[deg]);
+                }
             }
             if (this.coeff.Count != 0)
-                Deg = this.coeff.Keys[this.coeff.Keys.Count - 1];
+            {
+                this.Deg = this.coeff.Keys[this.coeff.Keys.Count - 1];
+            }
             else
-                Deg = 0;
+            {
+                this.Deg = 0;
+            }
         }
 
         /// <summary>

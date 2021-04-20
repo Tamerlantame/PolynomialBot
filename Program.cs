@@ -13,11 +13,11 @@ namespace PolynomialBot
     internal class Program
     {
         private static TelegramBotClient botClient;
-        private static SortedList<int, Executor<Polynomial>> idExecutorPairs = new SortedList<int, Executor<Polynomial>>();
+        private static readonly SortedList<int, Executor<Polynomial>> IdExecutorPairs = new SortedList<int, Executor<Polynomial>>();
 
-        private static void Main(string[] args)
+        private static void Main()
         {
-            botClient = new TelegramBotClient("1602474976:AAHPEqob_wWU9fXpLGTt5avZqKv5KesPkq8");
+            botClient = new TelegramBotClient("1781439833:AAF9Q-UR17H3FXKeIWRLrdTVPUVjM4B4POQ");
 
             // подписываемся на событие "отправка сообщений"
             botClient.OnMessage += BotClientOnMessageReceived;
@@ -125,21 +125,21 @@ namespace PolynomialBot
                 //    await BotClient.SendTextMessageAsync(message.Chat.Id, "message", replyMarkup: replayKeyboard);
                 //    break;
                 case "/clear":
-                    if (!idExecutorPairs.ContainsKey(message.From.Id))
+                    if (!IdExecutorPairs.ContainsKey(message.From.Id))
                     {
-                        idExecutorPairs.Add(message.From.Id, new Executor<Polynomial>());
+                        IdExecutorPairs.Add(message.From.Id, new Executor<Polynomial>());
                     }
 
-                    idExecutorPairs.Remove(message.From.Id);
+                    IdExecutorPairs.Remove(message.From.Id);
                     await botClient.SendTextMessageAsync(message.From.Id, "Очищено");
                     break;
                 case "/getvars":
-                    if (!idExecutorPairs.ContainsKey(message.From.Id))
+                    if (!IdExecutorPairs.ContainsKey(message.From.Id))
                     {
-                        idExecutorPairs.Add(message.From.Id, new Executor<Polynomial>());
+                        IdExecutorPairs.Add(message.From.Id, new Executor<Polynomial>());
                     }
 
-                    string vars = idExecutorPairs[message.From.Id].GetVars();
+                    string vars = IdExecutorPairs[message.From.Id].GetVars();
                     if (vars == string.Empty || vars == null)
                     {
                         vars = "Упс, никаких переменных нет";
@@ -165,12 +165,12 @@ namespace PolynomialBot
                 //    await BotClient.SendTextMessageAsync(message.Chat.Id, "What U need to generade?", replyMarkup: replayGeneradKeyboard);
                 //    break;
                 default:
-                    if (!idExecutorPairs.ContainsKey(message.From.Id))
+                    if (!IdExecutorPairs.ContainsKey(message.From.Id))
                     {
-                        idExecutorPairs.Add(message.From.Id, new Executor<Polynomial>());
+                        IdExecutorPairs.Add(message.From.Id, new Executor<Polynomial>());
                     }
 
-                    string answer = idExecutorPairs[message.From.Id].Launch(message.Text);
+                    string answer = IdExecutorPairs[message.From.Id].Launch(message.Text);
                     await botClient.SendTextMessageAsync(message.From.Id, answer);
                     break;
             }
